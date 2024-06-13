@@ -1,0 +1,94 @@
+---
+title: 关于hairenjun.link
+date: 2022-10-24 12:00
+cover: https://s2.loli.net/2024/03/13/f8Oa4WMCgcRAe7m.jpg
+tags: 
+- PGP
+- About
+- Contact
+categories:
+- 踩坑实况
+---
+
+## 这是一个用来测试各种各样奇怪操作的AWS VPS
+
+### 已实现的功能：
+- Nginx+某神奇妙妙工具
+- Aria2离线下载
+- Nginx+Hexo Blog
+- ZeroTier异地组网
+
+## 关于Hairenjun
+22岁，是一个一个一个高校生啊啊啊啊啊
+### 邮箱
+
+```
+hairenjun@hotmail.com
+```
+
+### PGP Public Key
+
+```
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+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
+=wWEC
+-----END PGP PUBLIC KEY BLOCK-----
+```
+
+> _若有特殊联系需求可以考虑使用PGP Public key加密后发送至上述邮箱_
+
+### 社交帐户:
+>[知乎](https://www.zhihu.com/people/hairenjun)<br>
+>[Bilibili](https://space.bilibili.com/23483498)<br>
+>[Github](https://github.com/hairenjun)<br>
+>[Pixiv](https://www.pixiv.net/users/19353362)
+
+
+
