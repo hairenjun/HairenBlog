@@ -1,0 +1,33 @@
+---
+title: 在Android设备上使用BBR拥塞控制算法
+
+date: 2024-10-5 19:00:00
+
+cover: https://s2.loli.net/2024/10/04/GXtswnKOzPvFYVe.png
+
+tags:
+
+  - Google BBR
+
+  - Linux Kernel Compile
+
+  - Congestion Control
+
+  - Android
+
+  - OnePlus 9
+
+categories:
+
+  - 整活
+
+keywords: Android,BBR,Linux Kernel Compile, Oneplus 9
+description: Use BBR Congestion Control Algorithm to improve network performance in SHIT 5G NR environment on Android Phone and RNDIS share
+---
+
+# 在Android设备OP9上启用BBR来争夺有限的流量带宽
+
+## Chapter 1 前情提要👀
+
+由于条件的特殊性，确实会存在这么一种地方,几百号人在一个巨大院子里，没有有线互联网连接，上互联网全靠智能手机，而且通常来说只会有一个基站。由于Privacy考虑我就不贴CellularZ的截图了。考虑到5G NR的空口承载能力很高，但是基站到骨干网就不好说了。想在其中丝滑上网，必须有点狠活。
+有一个很反常识的事情，就是这种环境中对上传带宽也是有要求的。不管是因为阻塞导致的重传，还是普通的fetch资源，你得先把请求传出去才能有回复对吧。所以光有一个下载带宽是不够的，很可能出现打不开网页，或者部分资源超时的问题，实际体验吊差。
