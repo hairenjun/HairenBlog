@@ -3,7 +3,7 @@ title: 在Android设备上使用BBR拥塞控制算法
 
 date: 2024-10-5 19:00:00
 
-cover: https://s2.loli.net/2024/10/04/GXtswnKOzPvFYVe.png
+cover: https://s2.loli.net/2024/10/05/D8cHzbgr2Ej4y5p.png
 
 tags:
 
@@ -35,7 +35,7 @@ description: Use BBR Congestion Control Algorithm to improve network performance
 
 ## Chapter 2 Why BBR
 
-BBR相比于默认的Cubic，其根据探测的最大的带宽而非丢包率而判断当前网络的状况，所以在网络带宽受限而人很多的情况下更能抢到带宽，而且原来玩VPS的时候看到过暴力多倍发包的方法。这样便能占据更多的上传带宽，人家还在等重传呢，我这边请求到位了，Server的数据下来自然的我的下载带宽也算是占据到了。
+BBR相比于默认的Cubic，其根据探测的最大的带宽而非丢包率而判断当前网络的状况，所以在网络带宽受限而人很多的情况下更能抢到带宽，而且原来玩VPS的时候看到过暴力多倍发包的方法。这样便能占据更多的上传带宽，人家还在等重传呢，我这边请求到位了，Server的数据下来自然的我的下载带宽也算是占据到了。关于拥塞控制可以看看这篇[知乎文章](https://zhuanlan.zhihu.com/p/144273871)
 
 ## Chapter 3 在Linux环境下使用BBR
 
@@ -130,6 +130,55 @@ static const int bbr_pacing_gain[] = {
 	BBR_UNIT, BBR_UNIT, BBR_UNIT	/* without creating excess queue... */
 };
 ```
-这里面的第二个int，在DRAIN状态降速到75%来防止丢包并让出带宽给别人，防止丢包我可以理解，但是让给别人我不能接受。如果降速，那转发队列就会被其他人填充，BW就会再下降，发包速率就会更低，什么君子协定带宽条约，丧权辱机的事情，这肯定不能接受啊，我们先记着，先不着急改，看看后面会怎么用这个数组
+这里面的第二个int，在DRAIN状态降速到75%来防止丢包并让出带宽给别人，防止丢包我可以理解，但是让给别人我不能接受。如果降速，那转发队列就会被其他人填充，BW就会再下降，发包速率就会更低，什么BW协定，割BW赔款，BW条约，丧权辱机的事情，这肯定不能接受啊，我们先记着，先不着急改，看看后面会怎么用这个数组
 
+然后是Line 178-179
+```C
+/* But after 3 rounds w/o significant bw growth, estimate pipe is full: */
+static const u32 bbr_full_bw_cnt = 3;
+```
+在发包速率增长三轮即达到195%后即认为“已经占满带宽”，不再继续试探带宽上限。这合理吗？不合理。那肯定要多长几轮嘛，拉满，必须拉满！不急着改先看看后面的
 
+哎呀后面人家解释了为什么就要三轮增长，Line 862-869
+```C
+/* Estimate when the pipe is full, using the change in delivery rate: BBR
+ * estimates that STARTUP filled the pipe if the estimated bw hasn't changed by
+ * at least bbr_full_bw_thresh (25%) after bbr_full_bw_cnt (3) non-app-limited
+ * rounds. Why 3 rounds: 1: rwin autotuning grows the rwin, 2: we fill the
+ * higher rwin, 3: we get higher delivery rate samples. Or transient
+ * cross-traffic or radio noise can go away. CUBIC Hystart shares a similar
+ * design goal, but uses delay and inter-ACK spacing instead of bandwidth.
+ */
+```
+可能是想说已经拿了更高的BW而且在高的话网络抖动的对RTT测量影响会变大什么的，RTT是怎么用的呢？还是得接着看。
+
+Line 919-923
+```C
+/* The goal of PROBE_RTT mode is to have BBR flows cooperatively and
+ * periodically drain the bottleneck queue, to converge to measure the true
+ * min_rtt (unloaded propagation delay). This allows the flows to keep queues
+ * small (reducing queuing delay and packet loss) and achieve fairness among
+ * BBR flows.
+```
+没什么，捕捉关键字“fairness”，RTT会影响估计正在链路中传输的或者说转发的队列大小，从而影响发包率。如果RTT变大的话说明转发的压力变大了，队列已经拉的非常长了，这时候就要减少发包来降低延时。想法是好的，但是我们减少发包了，队列多半会被另一群人补上，那我宁愿接受高延迟和丢包保证队列里大多数是我的包，丢包了大不了重传嘛
+
+Line 469-473
+```C
+/* An optimization in BBR to reduce losses: On the first round of recovery, we
+ * follow the packet conservation principle: send P packets per P packets acked.
+ * After that, we slow-start and send at most 2*P packets per P packets acked.
+ * After recovery finishes, or upon undo, we restore the cwnd we had when
+ * recovery started (capped by the target cwnd based on estimated BDP).
+ * /
+```
+基本上说是在稳定阶段ACK多少个包后我们发多少个包，来维持in-flight（正在队列里的和转发的）的包基本不变，然后再去多发点看看什么情况
+
+大佬写的代码实在是太高深了，我的水平是精读不了一点
+
+总结一下，BBR算法在开始的时候通过三轮1.25倍增益的加速发包试图摸到当前链路的最大带宽，并记录最小RTT，随后以记录的最大带宽的75%速率发包，来避免丢包和分享带宽给别人；在稳定阶段仍然不停的试探带宽，始终尝试增大发包速率；如果发现RTT显著增长，而丢包不增，则说明转发队列拉的很长了，主动降低发包速率降低延迟并礼让带宽；如果发现丢包暴增，就有可能被QoS（规则性限速）或者队列爆炸了，也会主动降低发包速率。
+
+## Chapter 6 调♂教环节
+
+玩VPS的都知道曾经的两个神中神，一个是锐速，还有一个就是[BBRPlus](https://github.com/cx9208/bbrplus/blob/master/tcp_bbrplus.c)，其核心修正如readme所说“bbr初版的两个问题：bbr在高丢包率下易失速以及bbr收敛慢的问题”，应该就是指的回退。我们注意到这个版本的bbr甚至都没有提到过Fairness（笑）
+
+## Chapter 7 编译安装

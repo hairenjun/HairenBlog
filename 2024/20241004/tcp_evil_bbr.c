@@ -98,7 +98,7 @@ struct bbr {
 		round_start:1,	     /* start of packet-timed tx->ack round? */
 		idle_restart:1,	     /* restarting after idle? */
 		probe_rtt_round_done:1,  /* a BBR_PROBE_RTT round at 4 pkts? */
-		unused:13,
+		unused:8,           /*默认13*/
 		lt_is_sampling:1,    /* taking long-term ("LT") samples now? */
 		lt_rtt_cnt:7,	     /* round trips in long-term interval */
 		lt_use_bw:1;	     /* use lt_bw as our bw estimate? */
@@ -109,7 +109,7 @@ struct bbr {
 	u32	pacing_gain:10,	/* current gain for setting pacing rate */
 		cwnd_gain:10,	/* current gain for setting cwnd */
 		full_bw_reached:1,   /* reached full bw in Startup? */
-		full_bw_cnt:2,	/* number of rounds without large bw gains */
+		full_bw_cnt:3,	/* 默认为2，number of rounds without large bw gains */
 		cycle_idx:3,	/* current index in pacing_gain cycle array */
 		has_seen_rtt:1, /* have we seen an RTT sample yet? */
 		unused_b:5;
@@ -159,7 +159,7 @@ static const int bbr_cwnd_gain  = BBR_UNIT * 2;
 /* The pacing_gain values for the PROBE_BW gain cycle, to discover/share bw: */
 static const int bbr_pacing_gain[] = {
 	BBR_UNIT * 5 / 4,	/* probe for more available bw */
-	BBR_UNIT * 3 / 4,	/* drain queue and/or yield bw to other flows */
+	BBR_UNIT * 7 / 8,	/* 默认3/4,drain queue and/or yield bw to other flows */
 	BBR_UNIT, BBR_UNIT, BBR_UNIT,	/* cruise at 1.0*bw to utilize pipe, */
 	BBR_UNIT, BBR_UNIT, BBR_UNIT	/* without creating excess queue... */
 };
@@ -176,7 +176,7 @@ static const u32 bbr_cwnd_min_target = 4;
 /* If bw has increased significantly (1.25x), there may be more bw available: */
 static const u32 bbr_full_bw_thresh = BBR_UNIT * 5 / 4;
 /* But after 3 rounds w/o significant bw growth, estimate pipe is full: */
-static const u32 bbr_full_bw_cnt = 3;
+static const u32 bbr_full_bw_cnt = 5; /* 默认为3*/
 
 /* "long-term" ("LT") bandwidth estimator parameters... */
 /* The minimum number of rounds in an LT bw sampling interval: */
@@ -1170,5 +1170,6 @@ MODULE_AUTHOR("Van Jacobson <vanj@google.com>");
 MODULE_AUTHOR("Neal Cardwell <ncardwell@google.com>");
 MODULE_AUTHOR("Yuchung Cheng <ycheng@google.com>");
 MODULE_AUTHOR("Soheil Hassas Yeganeh <soheil@google.com>");
+MODULE_AUTHOR("hairenjun <hairenjun@hotmail.com>");
 MODULE_LICENSE("Dual BSD/GPL");
 MODULE_DESCRIPTION("TCP BBR (Bottleneck Bandwidth and RTT)");
