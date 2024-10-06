@@ -182,3 +182,66 @@ Line 469-473
 玩VPS的都知道曾经的两个神中神，一个是锐速，还有一个就是[BBRPlus](https://github.com/cx9208/bbrplus/blob/master/tcp_bbrplus.c)，其核心修正如readme所说“bbr初版的两个问题：bbr在高丢包率下易失速以及bbr收敛慢的问题”，应该就是指的回退。我们注意到这个版本的bbr甚至都没有提到过Fairness（笑）
 
 ## Chapter 7 编译安装
+首先是喜闻乐见的编译环节，在GPT-4o-mini的辅助下，先装bison还有build-essential什么的
+
+然后cd到linux-5.4.280/下面，配置好编译选项（注意.config是隐藏的）
+```bash
+make menuconfig
+```
+不要相信网上教程说的先cp一份config过来，你又不是要装到本机上的。你问我为什么不直接用手机上那个侧载的linux编译呢，还不用交叉编译这么麻烦，header也是对头的：我有32框框的R9不用我去用傻逼888？
+
+在Networking options,TCP: Advanced TCP/IP options里面看一圈就好，确保congestion control是以m的状态要被编译成kernel mod的
+
+然后万事俱备，直接编译。这里GPT的建议是用Android NDK来编译，我想了想没必要，遂使用GNU GCC直接开编
+
+先装上交叉编译到arm需要的编译器
+```bash
+sudo apt install gcc-aarch64-linux-gnu‘
+```
+然后开始编译
+```bash
+make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- modules
+```
+然后是漫长的config和编译过程
+
+我在编译的时候还报错了
+```bash
+  CC [M]  net/ipv4/tcp_bbr.o
+In file included from ./include/linux/export.h:42,
+                 from ./include/linux/linkage.h:7,
+                 from ./include/linux/kernel.h:8,
+                 from ./include/linux/list.h:9,
+                 from ./include/linux/module.h:9,
+                 from net/ipv4/tcp_bbr.c:59:
+net/ipv4/tcp_bbr.c: In function ‘bbr_register’:
+./include/linux/compiler.h:419:45: error: call to ‘__compiletime_assert_369’ declared with attribute error: BUILD_BUG_ON failed: sizeof(struct bbr) > ICSK_CA_PRIV_SIZE
+  419 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+      |                                             ^
+./include/linux/compiler.h:400:25: note: in definition of macro ‘__compiletime_assert’
+  400 |                         prefix ## suffix();                             \
+      |                         ^~~~~~
+./include/linux/compiler.h:419:9: note: in expansion of macro ‘_compiletime_assert’
+  419 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+      |         ^~~~~~~~~~~~~~~~~~~
+./include/linux/build_bug.h:39:37: note: in expansion of macro ‘compiletime_assert’
+   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+      |                                     ^~~~~~~~~~~~~~~~~~
+./include/linux/build_bug.h:50:9: note: in expansion of macro ‘BUILD_BUG_ON_MSG’
+   50 |         BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+      |         ^~~~~~~~~~~~~~~~
+net/ipv4/tcp_bbr.c:1157:9: note: in expansion of macro ‘BUILD_BUG_ON’
+ 1157 |         BUILD_BUG_ON(sizeof(struct bbr) > ICSK_CA_PRIV_SIZE);
+      |         ^~~~~~~~~~~~
+make[2]: *** [scripts/Makefile.build:262: net/ipv4/tcp_bbr.o] Error 1
+make[1]: *** [scripts/Makefile.build:497: net/ipv4] Error 2
+make: *** [Makefile:1750: net] Error 2
+
+```
+
+后来查证是line 1157有一个小限制，ICSK_CA_PRIV_SIZE这个常量被锁在了13倍的u64，why？u never know.GPT-4o-mini说这个大小是根据拥塞控制算法决定的，比如Cubic就要大概256 byte，折合32倍u64,那这个13我是真想不到咋来的；又在另一个[帖子](https://fa.linux.kernel.narkive.com/kpxq42ev/setting-icsk-ca-priv-size-larger-than-16-sizeof-u32)上看到了16X的话其实“it worked perfectly fine”。找GPT算了一下,结果他说9倍就装得下bbr了。我直接？
+
+后来在bbrplus的代码中看到了答案，人家把这个值改成了14....同时还修改了
+```c
+u64 icsk_ca_priv[112 / sizeof(u64)];
+```
+考虑到这个kernel的bbr又加了妙妙小参数，我直接上16倍u64同时分子改为128（104+（16-13）*8）
