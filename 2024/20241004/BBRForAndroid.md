@@ -245,3 +245,10 @@ make: *** [Makefile:1750: net] Error 2
 u64 icsk_ca_priv[112 / sizeof(u64)];
 ```
 考虑到这个kernel的bbr又加了妙妙小参数，我直接上16倍u64同时分子改为128（104+（16-13）*8）
+## Chapter 8 狗血反转-拿到source了
+
+万万没想到，我在折腾Nethunter的BLE的时候意外的发现了我现在用的LineageOS的Kernel的源码，不知道是不是高通发出来的，反正LineageOS就是有。那我就不客气了，直接一个Fork出来，连着Nethunter一块儿给办咯！
+
+请看下一篇：赛博牢陆将会驾驶他的傻逼888折腾114514小时，打造最强移动嗅探渗透平台
+
+大佬移步Github [repo](https://github.com/hairenjun/android_kernel_oneplus_sm8350_NetHunterEdition/tree/lineage-21)
