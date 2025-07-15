@@ -2,7 +2,7 @@
 title: 看看fortiweb寻找持久化手段
 date: 2025-7-14 19:00:00
 
-cover: https://s2.loli.net/2024/10/05/D8cHzbgr2Ej4y5p.png
+cover: https://tc.z.wiki/autoupload/f/s53jY0hzeXWnA2DBfRnx7Z_Kv4b_7Q93KIuY3QIXybyyl5f0KlZfm6UsKj-HyTuv/20250715/Qd5M/840X1200/60168840_p0.jpg
 
 tags:
 
@@ -21,19 +21,19 @@ keywords: Fortiweb,CVE-2025-25257,guestmount,固件分析
 description: Disassemble and analyze the FortiWeb virtual machine to explore its startup process in order to identify persistence hook points
 ---
 
-## 叠甲/Delaimer
+## 叠甲/Delaimer🤗
 The disassembly and analysis of the FortiWeb virtual machine described herein is conducted solely for the purposes of legitimate security research and educational understanding. This activity is performed on a virtual machine instance for which I have explicit authorization and legal access rights. The intent is to explore the internal startup mechanisms to identify potential persistence hook points strictly within the context of enhancing defensive security knowledge, vulnerability research (with responsible disclosure principles). If this article fk u up, contact me to delete it.
 
-本文所述针对 FortiWeb 虚拟机的拆解与分析行为，仅用于合法的安全研究及教育学习目的。该活动在已获得明确授权及合法访问权限的虚拟机实例上进行，旨在通过研究其内部启动机制，识别潜在的持久化植入点，严格限定于：提升防御性安全认知和遵循负责任披露原则的漏洞研究。侵删。
+本文所述针对 FortiWeb 虚拟机的拆解与分析行为，仅用于合法的安全研究及教育学习目的。该活动在合法访问权限的虚拟机实例上进行，旨在通过研究其内部启动机制，识别潜在的持久化植入点，严格限定于：提升防御性安全认知和遵循负责任披露原则的漏洞研究。侵删。
 
 转载注明出处/Reprinting Requires Authorization with Clear Attribution
 
 滥用文章中的技术所造成的后果自负，作者不承担责任/Any consequences arising from the misuse of techniques described in this article are solely the responsibility of the implementer. The author shall not be held liable for any damages or legal violations whatsoever resulting from such actions.
 
-## 基本特性
+## 基本特性 😀
 Fortiweb在重启之后，绝大部分的运行时创建的文件都会消失，也没有corntab之类的东西，所以必须从启动流程入手做持久化。在我看来唯一的方法就是去启动流程之中做手脚，hook住拉起服务的脚本或者别的什么，所以说要对fortiweb的启动流程有详细的了解。
 
-## 开拆
+## 开拆 🛠
 某海鲜市场花费5CNY拿到虚拟机，一个boot.vmdk和两个适配不同版本的ovf，很显然boot.vmdk是问题的关键点。
 
 直接贴virt-filesystems的结果
@@ -182,9 +182,19 @@ gemini分析了一下，应该是/etc/init负责拉起整个业务，去看看
 /data/etc/ld.so.preload
 ....
 ```
-## 思路
+## 思路 🤔
 接下来的思路，就着init拉起来的进程看有没有说法，比如说这个带参数的python，一看就有让人hook的欲望，但是别忘了rootfs是有校验的，而且整个fs跑在内存里面，不抗重启；这种脚本也不抗更新，连带着checksum一块hook？filebeat这个，虽然不知道在干吗，但是后面这个参数-c /data/etc/，data和etc是datafs的东西，没有校验，是个持久化的好方向，就是不知道这个程序和yml有没有利用空间....（看一眼就知道了，我就不看了）
 
-不妨也来看看[官方思路](https://www.fortinet.com/blog/psirt-blogs/importance-of-patching-an-analysis-of-the-exploitation-of-n-day-vulnerabilities),笑嘻了哥们
+不妨也来看看[官方思路](https://www.fortinet.com/blog/psirt-blogs/importance-of-patching-an-analysis-of-the-exploitation-of-n-day-vulnerabilities),笑嘻了哥们🤣
 
-后面的操作大家自己去探索吧，我先开吃了
+后面的操作大家自己去探索吧，我先开吃了😋(主要是怕真写出来了大伙来吃我席)
+
+
+### 建议边听边想🎧🎧
+{% raw %}
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1964101508&auto=1&height=66"></iframe>
+{% endraw %}
+
+### 封面大图（エミリア prpr🥰）
+![60168840](https://tc.z.wiki/autoupload/f/s53jY0hzeXWnA2DBfRnx7Z_Kv4b_7Q93KIuY3QIXybyyl5f0KlZfm6UsKj-HyTuv/20250715/Qd5M/840X1200/60168840_p0.jpg)
+**PixivID:60168840**
