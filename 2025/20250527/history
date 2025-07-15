@@ -1,0 +1,721 @@
+└─$ mmcli -e -m 1
+successfully enabled the modem
+                                                                                            
+┌──(hairenjun㉿hairenjun)-[~]
+└─$ mmcli -w -m 1
+	/org/freedesktop/ModemManager1/Modem/1: Initial state, 'registered'
+
+^[[A^[[D^[[A^Ccancelling the operation...
+
+                                                                                            
+┌──(hairenjun㉿hairenjun)-[~]
+└─$ mmcli -m 1 --messaging-status
+  -------------------------------
+  Messaging | supported storages: me, mt, sm, sr
+            |   default storages: me
+                                                                                            
+┌──(hairenjun㉿hairenjun)-[~]
+└─$ mmcli -m 1 --messaging-list-sms
+No sms messages were found
+                                                                                            
+┌──(hairenjun㉿hairenjun)-[~]
+└─$ mmcli -m 1 --messaging-create=[]
+                                                                                            
+┌──(hairenjun㉿hairenjun)-[~]
+└─$ mmcli -m 1 --messaging-list-sms[]
+                                                                                            
+┌──(hairenjun㉿hairenjun)-[~]
+└─$ mmcli -m 1 --messaging-list-sms[number=13177067808,text=wocaonidema]
+error: no actions specified
+                                                                                            
+┌──(hairenjun㉿hairenjun)-[~]
+└─$ mmcli -m 1 --messaging-create-sms[number=13177067808,text=wocaonidema]
+error: no actions specified
+                                                                                            
+┌──(hairenjun㉿hairenjun)-[~]
+└─$ mmcli -m 1 --messaging-create-sms[number=13177067808,text=wocaonidema] --send
+error: no actions specified
+                                                                                            
+┌──(hairenjun㉿hairenjun)-[~]
+└─$ mmcli -m 0 --4g-scan --timeout=300
+error: no actions specified
+                                                                                            
+┌──(hairenjun㉿hairenjun)-[~]
+└─$ mmcli -m 0 --lte-scan --timeout=300
+error: no actions specified
+                                                                                            
+┌──(hairenjun㉿hairenjun)-[~]
+└─$ mmcli -m 0 --simple-connect="apn=3gnet"   
+error: couldn't find modem
+                                                                                            
+┌──(hairenjun㉿hairenjun)-[~]
+└─$ mmcli -m 1 --simple-connect="apn=3gnet"
+successfully connected the modem at bearer /org/freedesktop/ModemManager1/Bearer/1
+                                                                                            
+┌──(hairenjun㉿hairenjun)-[~]
+└─$ mmcli --modem=1                        
+  ----------------------------------
+  General  |                   path: /org/freedesktop/ModemManager1/Modem/1
+           |              device id: 2258524d019a045d11120687c02056627eb19916
+  ----------------------------------
+  Hardware |           manufacturer: Quectel
+           |                  model: EC20F
+           |      firmware revision: EC20CEHDLGR08A02M1G
+           |              supported: gsm-umts, lte
+           |                current: gsm-umts, lte
+           |           equipment id: 864568062065199
+  ----------------------------------
+  System   |                 device: /sys/devices/pci0000:00/0000:00:08.1/0000:06:00.4/usb3/3-1
+           |                physdev: /sys/devices/pci0000:00/0000:00:08.1/0000:06:00.4/usb3/3-1
+           |                drivers: option, rndis_host
+           |                 plugin: quectel
+           |           primary port: ttyUSB2
+           |                  ports: ttyUSB2 (at), ttyUSB3 (at), usb0 (net)
+  ----------------------------------
+  Status   |         unlock retries: sim-pin (3), sim-puk (10), sim-pin2 (3), sim-puk2 (10)
+           |                  state: connected
+           |            power state: on
+           |            access tech: lte
+           |         signal quality: 80% (recent)
+  ----------------------------------
+  Modes    |              supported: allowed: 2g, 3g, 4g; preferred: none
+           |                current: allowed: 2g, 3g, 4g; preferred: none
+  ----------------------------------
+  IP       |              supported: ipv4, ipv6, ipv4v6
+  ----------------------------------
+  3GPP     |                   imei: 864568062065199
+           |            operator id: 46000
+           |          operator name: CHINA MOBILE
+           |           registration: home
+           |   packet service state: attached
+  ----------------------------------
+  3GPP EPS |   ue mode of operation: csps-2
+           |    initial bearer path: /org/freedesktop/ModemManager1/Bearer/0
+           |     initial bearer apn: cmnet
+           | initial bearer ip type: ipv4v6
+  ----------------------------------
+  SIM      |       primary sim path: /org/freedesktop/ModemManager1/SIM/1
+  ----------------------------------
+  Bearer   |                  paths: /org/freedesktop/ModemManager1/Bearer/1
+                                                                                            
+┌──(hairenjun㉿hairenjun)-[~]
+└─$ mmcli -m 1 --simple-connect="apn=cmnet"
+error: couldn't connect the modem: 'GDBus.Error:org.freedesktop.ModemManager1.Error.Serial.OpenFailed: Open failed: Could not open serial device ttyUSB2: port is connected'
+                                                                                            
+┌──(hairenjun㉿hairenjun)-[~]
+└─$ mmcli -m 1 -r                          
+successfully reseted the modem
+                                                                                            
+┌──(hairenjun㉿hairenjun)-[~]
+└─$ mmcli -L                               
+No modems were found
+                                                                                            
+┌──(hairenjun㉿hairenjun)-[~]
+└─$ mmcli -L
+    /org/freedesktop/ModemManager1/Modem/2 [Quectel] EC20F
+                                                                                            
+┌──(hairenjun㉿hairenjun)-[~]
+└─$ mmcli -m 2 --simple-connect='apn=cmnet,ip-type=ipv4v6'
+successfully connected the modem at bearer /org/freedesktop/ModemManager1/Bearer/4
+                                                                                            
+┌──(hairenjun㉿hairenjun)-[~]
+└─$ mmcli --modem=2                                       
+  ----------------------------------
+  General  |                   path: /org/freedesktop/ModemManager1/Modem/2
+           |              device id: 2258524d019a045d11120687c02056627eb19916
+  ----------------------------------
+  Hardware |           manufacturer: Quectel
+           |                  model: EC20F
+           |      firmware revision: EC20CEHDLGR08A02M1G
+           |              supported: gsm-umts, lte
+           |                current: gsm-umts, lte
+           |           equipment id: 864568062065199
+  ----------------------------------
+  System   |                 device: /sys/devices/pci0000:00/0000:00:08.1/0000:06:00.4/usb3/3-1
+           |                physdev: /sys/devices/pci0000:00/0000:00:08.1/0000:06:00.4/usb3/3-1
+           |                drivers: option, rndis_host
+           |                 plugin: quectel
+           |           primary port: ttyUSB2
+           |                  ports: ttyUSB2 (at), ttyUSB3 (at), usb0 (net)
+  ----------------------------------
+  Status   |         unlock retries: sim-pin (3), sim-puk (10), sim-pin2 (3), sim-puk2 (10)
+           |                  state: connected
+           |            power state: on
+           |            access tech: lte
+           |         signal quality: 80% (recent)
+  ----------------------------------
+  Modes    |              supported: allowed: 2g, 3g, 4g; preferred: none
+           |                current: allowed: 2g, 3g, 4g; preferred: none
+  ----------------------------------
+  IP       |              supported: ipv4, ipv6, ipv4v6
+  ----------------------------------
+  3GPP     |                   imei: 864568062065199
+           |            operator id: 46000
+           |          operator name: CHINA MOBILE
+           |           registration: home
+           |   packet service state: attached
+  ----------------------------------
+  3GPP EPS |   ue mode of operation: csps-2
+           |    initial bearer path: /org/freedesktop/ModemManager1/Bearer/3
+           |     initial bearer apn: cmnet
+           | initial bearer ip type: ipv4v6
+  ----------------------------------
+  SIM      |       primary sim path: /org/freedesktop/ModemManager1/SIM/2
+  ----------------------------------
+  Bearer   |                  paths: /org/freedesktop/ModemManager1/Bearer/4
+                                                                                            
+┌──(hairenjun㉿hairenjun)-[~]
+└─$ mmcli --modem=2 --bearer=4
+  ------------------------------------
+  General            |           path: /org/freedesktop/ModemManager1/Bearer/4
+                     |           type: default
+  ------------------------------------
+  Status             |      connected: yes
+                     |      suspended: no
+                     |    multiplexed: no
+                     |      interface: ttyUSB2
+                     |     ip timeout: 20
+                     |     profile id: 1
+  ------------------------------------
+  Properties         |            apn: cmnet
+                     |        roaming: allowed
+                     |        ip type: ipv4v6
+  ------------------------------------
+  IPv4 configuration |         method: ppp
+                     |         prefix: 0
+  ------------------------------------
+  IPv6 configuration |         method: ppp
+                     |         prefix: 0
+  ------------------------------------
+  Statistics         |     start date: 2025-05-27T08:44:39Z
+                     |       duration: 59
+                     |       attempts: 1
+                     | total-duration: 59
+                                                                                            
+┌──(hairenjun㉿hairenjun)-[~]
+└─$ ifconfig     
+eth0: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+        ether fc:5c:ee:33:60:aa  txqueuelen 1000  (Ethernet)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+eth1: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+        ether 6c:1f:f7:04:39:f0  txqueuelen 1000  (Ethernet)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        inet6 ::1  prefixlen 128  scopeid 0x10<host>
+        loop  txqueuelen 1000  (Local Loopback)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+usb0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.225.23  netmask 255.255.255.0  broadcast 192.168.225.255
+        inet6 fe80::8ad4:85f0:11e4:f13d  prefixlen 64  scopeid 0x20<link>
+        ether c6:64:0c:ae:f6:1d  txqueuelen 1000  (Ethernet)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+vmnet1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.53.1  netmask 255.255.255.0  broadcast 192.168.53.255
+        inet6 fe80::250:56ff:fec0:1  prefixlen 64  scopeid 0x20<link>
+        ether 00:50:56:c0:00:01  txqueuelen 1000  (Ethernet)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+vmnet2: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.88.1  netmask 255.255.255.0  broadcast 192.168.88.255
+        inet6 fe80::250:56ff:fec0:2  prefixlen 64  scopeid 0x20<link>
+        ether 00:50:56:c0:00:02  txqueuelen 1000  (Ethernet)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+vmnet8: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.243.1  netmask 255.255.255.0  broadcast 192.168.243.255
+        inet6 fe80::250:56ff:fec0:8  prefixlen 64  scopeid 0x20<link>
+        ether 00:50:56:c0:00:08  txqueuelen 1000  (Ethernet)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+                                                                                            
+┌──(hairenjun㉿hairenjun)-[~]
+└─$ ip link set usb0 up
+RTNETLINK answers: Operation not permitted
+                                                                                            
+┌──(hairenjun㉿hairenjun)-[~]
+└─$ sudo ip link set usb0 up
+[sudo] password for hairenjun: 
+                                                                                            
+┌──(hairenjun㉿hairenjun)-[~]
+└─$ ip route show           
+default via 192.168.225.1 dev usb0 proto dhcp src 192.168.225.23 metric 100 
+192.168.53.0/24 dev vmnet1 proto kernel scope link src 192.168.53.1 
+192.168.88.0/24 dev vmnet2 proto kernel scope link src 192.168.88.1 
+192.168.225.0/24 dev usb0 proto kernel scope link src 192.168.225.23 metric 100 
+192.168.243.0/24 dev vmnet8 proto kernel scope link src 192.168.243.1 
+                                                                                            
+┌──(hairenjun㉿hairenjun)-[~]
+└─$ sudo ip link set ttyUSB2 up
+Cannot find device "ttyUSB2"
+                                                                                            
+┌──(hairenjun㉿hairenjun)-[~]
+└─$ mmcli -L                                
+    /org/freedesktop/ModemManager1/Modem/2 [Quectel] EC20F
+                                                                                            
+┌──(hairenjun㉿hairenjun)-[~]
+└─$ mmcli --modem=2 --set-mbim-mode=true
+
+error: no actions specified
+                                                                                            
+┌──(hairenjun㉿hairenjun)-[~]
+└─$ mmcli -L                            
+    /org/freedesktop/ModemManager1/Modem/3 [Quectel] EC20-CE-HDLG
+                                                                                            
+┌──(hairenjun㉿hairenjun)-[~]
+└─$ mmcli --modem=3                     
+  --------------------------------
+  General  |                 path: /org/freedesktop/ModemManager1/Modem/3
+           |            device id: c55a13102ead8c7e80761a1910669f3e04088d25
+  --------------------------------
+  Hardware |         manufacturer: Quectel
+           |                model: EC20-CE-HDLG
+           |    firmware revision: EC20CEHDLGR08A02M1G
+           |         h/w revision: QUECTEL Mobile Broadband Modul
+           |            supported: gsm-umts, lte
+           |              current: gsm-umts, lte
+           |         equipment id: 864568062065199
+  --------------------------------
+  System   |               device: /sys/devices/pci0000:00/0000:00:08.1/0000:06:00.4/usb3/3-1
+           |              physdev: /sys/devices/pci0000:00/0000:00:08.1/0000:06:00.4/usb3/3-1
+           |              drivers: cdc_mbim, option
+           |               plugin: quectel
+           |         primary port: cdc-wdm3
+           |                ports: cdc-wdm3 (mbim), ttyUSB0 (ignored), ttyUSB1 (gps), 
+           |                       ttyUSB2 (at), ttyUSB3 (at), wwan0 (net)
+  --------------------------------
+  Status   |                 lock: sim-pin2
+           |       unlock retries: sim-pin2 (3)
+           |                state: registered
+           |          power state: on
+           |          access tech: lte
+           |       signal quality: 22% (recent)
+  --------------------------------
+  Modes    |            supported: allowed: 2g, 3g, 4g; preferred: none
+           |              current: allowed: 2g, 3g, 4g; preferred: none
+  --------------------------------
+  IP       |            supported: ipv4, ipv6, ipv4v6
+  --------------------------------
+  3GPP     |                 imei: 864568062065199
+           |        enabled locks: fixed-dialing
+           |          operator id: 46000
+           |        operator name: CMCC
+           |         registration: home
+           | packet service state: attached
+  --------------------------------
+  3GPP EPS | ue mode of operation: csps-2
+  --------------------------------
+  SIM      |     primary sim path: /org/freedesktop/ModemManager1/SIM/3
+
+┌──(hairenjun㉿hairenjun)-[~]
+└─$ mmcli -m 1 --command='AT'
+response: ''
+                                                                                
+┌──(hairenjun㉿hairenjun)-[~]
+└─$ mmcli -m 1 --command='AT+'
+error: command failed: 'GDBus.Error:org.freedesktop.ModemManager1.Error.MobileEquipment.Unknown: Unknown error'
+                                                                                
+┌──(hairenjun㉿hairenjun)-[~]
+└─$ mmcli -m 1 --command='AT' 
+response: ''
+                                                                                
+┌──(hairenjun㉿hairenjun)-[~]
+└─$ mmcli -m 1 --command='AT+QCFG="usbnet",2'
+response: ''
+                       
+
+
+                       ┌──(hairenjun㉿hairenjun)-[/media/hairenjun/DB/ITI/bsnl]
+└─$ curl --tlsv1.2 --noproxy '*' -v https://www.bilibili.com
+
+* Host www.bilibili.com:443 was resolved.
+* IPv6: 2409:8c4c:c00:9::24, 2409:8c38:c40:100::241, 2409:8c4c:c00:9::22, 2409:8c4c:c00:9::23, 2409:8c38:c40:100::3, 2409:8c38:c40:100::243, 2409:8c38:c40:100::242, 2409:8c20:5624::32
+* IPv4: 223.111.250.55, 112.13.92.199, 112.13.92.203, 111.48.57.46, 111.48.57.45, 117.169.98.20, 112.13.92.196, 112.13.92.202, 111.48.57.44, 223.111.250.53, 223.111.250.57, 117.169.96.198, 223.111.252.67, 223.111.250.54, 117.169.98.21, 223.111.249.190, 112.13.92.195, 223.111.252.66, 117.169.96.200, 117.169.96.199
+*   Trying [2409:8c4c:c00:9::24]:443...
+* Immediate connect fail for 2409:8c4c:c00:9::24: Network is unreachable
+*   Trying [2409:8c38:c40:100::241]:443...
+* Immediate connect fail for 2409:8c38:c40:100::241: Network is unreachable
+*   Trying [2409:8c4c:c00:9::22]:443...
+* Immediate connect fail for 2409:8c4c:c00:9::22: Network is unreachable
+*   Trying [2409:8c4c:c00:9::23]:443...
+* Immediate connect fail for 2409:8c4c:c00:9::23: Network is unreachable
+*   Trying [2409:8c38:c40:100::3]:443...
+* Immediate connect fail for 2409:8c38:c40:100::3: Network is unreachable
+*   Trying [2409:8c38:c40:100::243]:443...
+* Immediate connect fail for 2409:8c38:c40:100::243: Network is unreachable
+*   Trying [2409:8c38:c40:100::242]:443...
+* Immediate connect fail for 2409:8c38:c40:100::242: Network is unreachable
+*   Trying [2409:8c20:5624::32]:443...
+* Immediate connect fail for 2409:8c20:5624::32: Network is unreachable
+*   Trying 223.111.250.55:443...
+* ALPN: curl offers h2,http/1.1
+* TLSv1.3 (OUT), TLS handshake, Client hello (1):
+*  CAfile: /etc/ssl/certs/ca-certificates.crt
+*  CApath: /etc/ssl/certs
+* Recv failure: Connection reset by peer
+* TLS connect error: error:00000000:lib(0)::reason(0)
+* OpenSSL SSL_connect: Connection reset by peer in connection to www.bilibili.com:443 
+* closing connection #0
+curl: (35) Recv failure: Connection reset by peer
+                                                                                                                                            
+┌──(hairenjun㉿hairenjun)-[/media/hairenjun/DB/ITI/bsnl]
+└─$ curl --noproxy '*' --resolve www.bilibili.com:443:112.13.92.195 -v https://www.bilibili.com
+
+* Added www.bilibili.com:443:112.13.92.195 to DNS cache
+* Hostname www.bilibili.com was found in DNS cache
+*   Trying 112.13.92.195:443...
+* ALPN: curl offers h2,http/1.1
+* TLSv1.3 (OUT), TLS handshake, Client hello (1):
+*  CAfile: /etc/ssl/certs/ca-certificates.crt
+*  CApath: /etc/ssl/certs
+* Recv failure: Connection reset by peer
+* TLS connect error: error:00000000:lib(0)::reason(0)
+* OpenSSL SSL_connect: Connection reset by peer in connection to www.bilibili.com:443 
+* closing connection #0
+curl: (35) Recv failure: Connection reset by peer
+                                                                                                                                            
+┌──(hairenjun㉿hairenjun)-[/media/hairenjun/DB/ITI/bsnl]
+└─$ curl --noproxy '*' --ech GREASE -v https://www.bilibili.com
+
+curl: option --ech: the installed libcurl version does not support this
+curl: try 'curl --help' or 'curl --manual' for more information
+                                                                                                                                            
+┌──(hairenjun㉿hairenjun)-[/media/hairenjun/DB/ITI/bsnl]
+└─$ openssl s_client -connect 112.13.92.195:443 -servername www.bilibili.com -tls1_3 -showcerts
+
+Connecting to 112.13.92.195
+CONNECTED(00000003)
+write:errno=104
+---
+no peer certificate available
+---
+No client certificate CA names sent
+Negotiated TLS1.3 group: <NULL>
+---
+SSL handshake has read 0 bytes and written 1485 bytes
+Verification: OK
+---
+New, (NONE), Cipher is (NONE)
+Protocol: TLSv1.3
+This TLS version forbids renegotiation.
+Compression: NONE
+Expansion: NONE
+No ALPN negotiated
+Early data was not sent
+Verify return code: 0 (ok)
+---
+                                                                                                                                            
+┌──(hairenjun㉿hairenjun)-[/media/hairenjun/DB/ITI/bsnl]
+└─$ openssl s_client -servername www.bilibili.com -tls1_3 -showcerts 
+
+40378E39347F0000:error:8000006F:system library:BIO_connect:Connection refused:../crypto/bio/bio_sock2.c:178:calling connect()
+40378E39347F0000:error:10000067:BIO routines:BIO_connect:connect error:../crypto/bio/bio_sock2.c:180:
+40378E39347F0000:error:8000006F:system library:BIO_connect:Connection refused:../crypto/bio/bio_sock2.c:178:calling connect()
+40378E39347F0000:error:10000067:BIO routines:BIO_connect:connect error:../crypto/bio/bio_sock2.c:180:
+connect:errno=111
+                                                                                                                                            
+┌──(hairenjun㉿hairenjun)-[/media/hairenjun/DB/ITI/bsnl]
+└─$ openssl s_client -servername www.bilibili.com -tls1_3 -showcerts
+
+406767173B7F0000:error:8000006F:system library:BIO_connect:Connection refused:../crypto/bio/bio_sock2.c:178:calling connect()
+406767173B7F0000:error:10000067:BIO routines:BIO_connect:connect error:../crypto/bio/bio_sock2.c:180:
+406767173B7F0000:error:8000006F:system library:BIO_connect:Connection refused:../crypto/bio/bio_sock2.c:178:calling connect()
+406767173B7F0000:error:10000067:BIO routines:BIO_connect:connect error:../crypto/bio/bio_sock2.c:180:
+connect:errno=111
+                                                                                                                                            
+┌──(hairenjun㉿hairenjun)-[/media/hairenjun/DB/ITI/bsnl]
+└─$ openssl s_client -servername www.bilibili.com -tls1_3 -showcerts
+
+4087CE5F9E7F0000:error:8000006F:system library:BIO_connect:Connection refused:../crypto/bio/bio_sock2.c:178:calling connect()
+4087CE5F9E7F0000:error:10000067:BIO routines:BIO_connect:connect error:../crypto/bio/bio_sock2.c:180:
+4087CE5F9E7F0000:error:8000006F:system library:BIO_connect:Connection refused:../crypto/bio/bio_sock2.c:178:calling connect()
+4087CE5F9E7F0000:error:10000067:BIO routines:BIO_connect:connect error:../crypto/bio/bio_sock2.c:180:
+connect:errno=111
+                                                                                                                                            
+┌──(hairenjun㉿hairenjun)-[/media/hairenjun/DB/ITI/bsnl]
+└─$ openssl s_client -servername www.bilibili.com -tls1_3 -showcerts
+
+40E7EF9F267F0000:error:8000006F:system library:BIO_connect:Connection refused:../crypto/bio/bio_sock2.c:178:calling connect()
+40E7EF9F267F0000:error:10000067:BIO routines:BIO_connect:connect error:../crypto/bio/bio_sock2.c:180:
+40E7EF9F267F0000:error:8000006F:system library:BIO_connect:Connection refused:../crypto/bio/bio_sock2.c:178:calling connect()
+40E7EF9F267F0000:error:10000067:BIO routines:BIO_connect:connect error:../crypto/bio/bio_sock2.c:180:
+connect:errno=111
+                                                                                                                                            
+┌──(hairenjun㉿hairenjun)-[/media/hairenjun/DB/ITI/bsnl]
+└─$ openssl s_client -connect 112.13.92.195:443 -servername www.bilibili.com -tls1_3 -showcerts
+
+Connecting to 112.13.92.195
+CONNECTED(00000003)
+write:errno=104
+---
+no peer certificate available
+---
+No client certificate CA names sent
+Negotiated TLS1.3 group: <NULL>
+---
+SSL handshake has read 0 bytes and written 1485 bytes
+Verification: OK
+---
+New, (NONE), Cipher is (NONE)
+Protocol: TLSv1.3
+This TLS version forbids renegotiation.
+Compression: NONE
+Expansion: NONE
+No ALPN negotiated
+Early data was not sent
+Verify return code: 0 (ok)
+---
+                                                                                                                                            
+┌──(hairenjun㉿hairenjun)-[/media/hairenjun/DB/ITI/bsnl]
+└─$ ping www.bilibili.com
+PING a.w.bilicdn1.com (223.111.252.67) 56(84) bytes of data.
+64 bytes from 223.111.252.67: icmp_seq=1 ttl=54 time=32.9 ms
+64 bytes from 223.111.252.67: icmp_seq=2 ttl=54 time=50.7 ms
+64 bytes from 223.111.252.67: icmp_seq=3 ttl=54 time=49.1 ms
+^C
+--- a.w.bilicdn1.com ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 32.854/44.231/50.735/8.072 ms
+                                                                                                                                            
+┌──(hairenjun㉿hairenjun)-[/media/hairenjun/DB/ITI/bsnl]
+└─$ openssl s_client -connect 223.111.252.67:443 -servername www.bilibili.com -tls1_3 -showcerts
+
+Connecting to 223.111.252.67
+CONNECTED(00000003)
+write:errno=104
+---
+no peer certificate available
+---
+No client certificate CA names sent
+Negotiated TLS1.3 group: <NULL>
+---
+SSL handshake has read 0 bytes and written 1485 bytes
+Verification: OK
+---
+New, (NONE), Cipher is (NONE)
+Protocol: TLSv1.3
+This TLS version forbids renegotiation.
+Compression: NONE
+Expansion: NONE
+No ALPN negotiated
+Early data was not sent
+Verify return code: 0 (ok)
+---
+                                                                                                                                            
+┌──(hairenjun㉿hairenjun)-[/media/hairenjun/DB/ITI/bsnl]
+└─$ openssl s_client -connect 112.13.92.195:443 -servername cloudflare.com -tls1_2
+
+Connecting to 112.13.92.195
+CONNECTED(00000003)
+depth=2 OU=GlobalSign Root CA - R3, O=GlobalSign, CN=GlobalSign
+verify return:1
+depth=1 C=BE, O=GlobalSign nv-sa, CN=GlobalSign RSA OV SSL CA 2018
+verify return:1
+depth=0 C=CN, ST=上海, L=上海, O=上海幻电信息科技有限公司, CN=*.bilibili.com
+verify return:1
+---
+Certificate chain
+ 0 s:C=CN, ST=上海, L=上海, O=上海幻电信息科技有限公司, CN=*.bilibili.com
+   i:C=BE, O=GlobalSign nv-sa, CN=GlobalSign RSA OV SSL CA 2018
+   a:PKEY: RSA, 2048 (bit); sigalg: sha256WithRSAEncryption
+   v:NotBefore: Oct 31 09:46:02 2024 GMT; NotAfter: Dec  2 09:46:01 2025 GMT
+ 1 s:C=BE, O=GlobalSign nv-sa, CN=GlobalSign RSA OV SSL CA 2018
+   i:OU=GlobalSign Root CA - R3, O=GlobalSign, CN=GlobalSign
+   a:PKEY: RSA, 2048 (bit); sigalg: sha256WithRSAEncryption
+   v:NotBefore: Nov 21 00:00:00 2018 GMT; NotAfter: Nov 21 00:00:00 2028 GMT
+ 2 s:OU=GlobalSign Root CA - R3, O=GlobalSign, CN=GlobalSign
+   i:C=BE, O=GlobalSign nv-sa, OU=Root CA, CN=GlobalSign Root CA
+   a:PKEY: RSA, 2048 (bit); sigalg: sha256WithRSAEncryption
+   v:NotBefore: Sep 19 00:00:00 2018 GMT; NotAfter: Jan 28 12:00:00 2028 GMT
+---
+Server certificate
+-----BEGIN CERTIFICATE-----
+MIIGZjCCBU6gAwIBAgIMOTxU6cyy3nUpafQ9MA0GCSqGSIb3DQEBCwUAMFAxCzAJ
+BgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSYwJAYDVQQDEx1H
+bG9iYWxTaWduIFJTQSBPViBTU0wgQ0EgMjAxODAeFw0yNDEwMzEwOTQ2MDJaFw0y
+NTEyMDIwOTQ2MDFaMHcxCzAJBgNVBAYTAkNOMQ8wDQYDVQQIDAbkuIrmtbcxDzAN
+BgNVBAcMBuS4iua1tzEtMCsGA1UECgwk5LiK5rW35bm755S15L+h5oGv56eR5oqA
+5pyJ6ZmQ5YWs5Y+4MRcwFQYDVQQDDA4qLmJpbGliaWxpLmNvbTCCASIwDQYJKoZI
+hvcNAQEBBQADggEPADCCAQoCggEBANrOd6vZ4pklKMFMjhWsIlqKMYAPIDsdqabS
+dnEloIsIQTF6f7nTEvTA1tUDv3vnVvLwW8Rpym+q1euGpwYvZyuT0nAzRUD3GEho
+1E9lXJF8qmTU4jd7fmaD/rO+aSCbIF3dGgINU+gqkXqExRJmu1FswEBKnbUZOTU6
+HYBVf7CFYY6lhyR8Mlk1DSwugG3xpJYdEqrJpoiQFRizxpOOSTZTINcjbFxATiOH
+i59rQdJSrBhl2G/ZoEPm6UWigeJ+9YsNkdLAk5uMZRiTwd4f8oIMQ1QX6Xl9PdNr
+vyvSAoqTfBOPH09igVhUgU9wg1ewR2IbgQB2PEZt5wcdqjVayPkCAwEAAaOCAxcw
+ggMTMA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMIGOBggrBgEFBQcBAQSB
+gTB/MEQGCCsGAQUFBzAChjhodHRwOi8vc2VjdXJlLmdsb2JhbHNpZ24uY29tL2Nh
+Y2VydC9nc3JzYW92c3NsY2EyMDE4LmNydDA3BggrBgEFBQcwAYYraHR0cDovL29j
+c3AuZ2xvYmFsc2lnbi5jb20vZ3Nyc2FvdnNzbGNhMjAxODBWBgNVHSAETzBNMEEG
+CSsGAQQBoDIBFDA0MDIGCCsGAQUFBwIBFiZodHRwczovL3d3dy5nbG9iYWxzaWdu
+LmNvbS9yZXBvc2l0b3J5LzAIBgZngQwBAgIwJwYDVR0RBCAwHoIOKi5iaWxpYmls
+aS5jb22CDGJpbGliaWxpLmNvbTAdBgNVHSUEFjAUBggrBgEFBQcDAQYIKwYBBQUH
+AwIwHwYDVR0jBBgwFoAU+O9/8s14Z6jeb48kjYjxhwMCs+swHQYDVR0OBBYEFA3b
+h7X3xVcYKx9xVhlkGt7DyRIGMIIBgAYKKwYBBAHWeQIEAgSCAXAEggFsAWoAdgCv
+GBoo1oyj4KmKTJxnqwn4u7wiuq68sTijoZ3T+bYDDQAAAZLh98NrAAAEAwBHMEUC
+IQDi/xf8q7AaY+N7BT1/lxBG3FL3hgGPPHmt9ztUuAvaUAIgBSx3o2oXY/O0hx8Q
+6EL0DygRucQenLLgn0IOllSQ9HoAdwAS8U40vVNyTIQGGcOPP3oT+Oe1YoeInG0w
+BYTr5YYmOgAAAZLh98NPAAAEAwBIMEYCIQC7duGCd47Non3JBcLGfSqAlK/rH5CK
+B5M85UndZC+7ZQIhAOKT6iHwF4U1War4e34e48DnSYO4QCjo0BYkXZ42IjCLAHcA
+5tIxY0B3jMEQQQbXcbnOwdJA9paEhvu6hzId/R43jlAAAAGS4ffDdwAABAMASDBG
+AiEAtMrGOJUhMGW3lc18aMiPUuK5L1MTLfBhek1Mh5InQS8CIQC717fw5NS7T9MZ
+DtwahI6JLqfhZuFs0rodeIG3FqtwoTANBgkqhkiG9w0BAQsFAAOCAQEAfuCK5rtu
+yKqeEd1ns50ex+j0MnhpprngXXSgTAkK5MjT3ZD0jBF5GOwiJZ8NDK2XCGRegIEP
+SlT8KfMPLU7lqa4WawNiEFuuZTQUAax2G77Jpm67ieOPijkWVnkDPp07aW174PFr
+/gWG0nQIecSsEp+iwRMldprCGPp4FvoT6GAVgJlorycN60FfGh9WPXejfFhlLnXV
+8Oxi9srvcZmQVbJIw7pRcWxzTSpCGuFokG/PbAX/baTLScrzVWyibg450eJ5xsGq
+BpYQDEjEssBQ7oD+ppnDphfsVVu7g4iHM9C9f66mwUYTxwjQjiyUp7OtkZtvD67s
+HvmKqWKQ3CW78g==
+-----END CERTIFICATE-----
+subject=C=CN, ST=上海, L=上海, O=上海幻电信息科技有限公司, CN=*.bilibili.com
+issuer=C=BE, O=GlobalSign nv-sa, CN=GlobalSign RSA OV SSL CA 2018
+---
+No client certificate CA names sent
+Peer signing digest: SHA256
+Peer signature type: rsa_pss_rsae_sha256
+Peer Temp Key: X25519, 253 bits
+---
+SSL handshake has read 4513 bytes and written 425 bytes
+Verification: OK
+---
+New, TLSv1.2, Cipher is ECDHE-RSA-CHACHA20-POLY1305
+Protocol: TLSv1.2
+Server public key is 2048 bit
+Secure Renegotiation IS supported
+Compression: NONE
+Expansion: NONE
+No ALPN negotiated
+SSL-Session:
+    Protocol  : TLSv1.2
+    Cipher    : ECDHE-RSA-CHACHA20-POLY1305
+    Session-ID: B31329F5C755B357DA54581F7A215C48CBFCD71BFD7D7523150D88C0FBAD11C9
+    Session-ID-ctx: 
+    Master-Key: 19784D9894C0457EF93FBA562C439B630667196F861B263FD2D6003DA60DCD7111956382A2E47FA6551C90699167753D
+    PSK identity: None
+    PSK identity hint: None
+    SRP username: None
+    TLS session ticket lifetime hint: 1800 (seconds)
+    TLS session ticket:
+    0000 - ba 33 c9 77 bc 20 b9 0a-fe ba 88 23 71 b6 08 56   .3.w. .....#q..V
+    0010 - 8b d2 df 08 89 17 3e 98-0a cc 6e 55 ec 49 e6 89   ......>...nU.I..
+    0020 - 64 35 35 ac 84 2f a8 fb-3e ba 84 1d df f1 05 16   d55../..>.......
+    0030 - 93 4e 18 d8 d5 eb 4a d3-a5 1a ea 00 1e 54 09 c7   .N....J......T..
+    0040 - bf 95 58 7b 65 4f 1a be-0e 3c 38 10 f1 2b 99 8d   ..X{eO...<8..+..
+    0050 - 51 e4 50 49 6b 7b ad 09-8a 4b d4 d8 ce 64 51 ac   Q.PIk{...K...dQ.
+    0060 - b8 18 26 8f 6b 12 0c 8c-ae 0d 93 f1 fe 79 45 59   ..&.k........yEY
+    0070 - 1a 58 ad 84 94 db 28 ad-d7 be 8f ac 08 87 b3 92   .X....(.........
+    0080 - 52 b0 33 97 51 23 de fb-35 f5 4d 2a 5c df b3 cb   R.3.Q#..5.M*\...
+    0090 - 3a f2 f8 f1 a3 82 1f 5c-b4 3f 0b 6f bb d0 f6 a8   :......\.?.o....
+    00a0 - f8 89 a9 3a eb 33 8d c8-31 5f 14 c0 c1 c3 57 90   ...:.3..1_....W.
+    00b0 - e8 5b 3b 09 d4 29 18 85-27 82 25 ea 59 07 f4 0b   .[;..)..'.%.Y...
+
+    Start Time: 1748403359
+    Timeout   : 7200 (sec)
+    Verify return code: 0 (ok)
+    Extended master secret: yes
+---
+closed
+
+
+
+└─$ mmcli -m 4                                                  
+  -----------------------------------
+  General  |                    path: /org/freedesktop/ModemManager1/Modem/4
+           |               device id: 9b396a18ac7c90dfd6d15fa50e5e404f72a461af
+  -----------------------------------
+  Hardware |            manufacturer: Android
+           |                   model: Android
+           |       firmware revision: EC20CEHCR06A04M1G
+           |          carrier config: OpenMkt-Commercial-CT
+           | carrier config revision: 0501131C
+           |            h/w revision: QUECTEL Mobile Broadband Modul
+           |               supported: gsm-umts, lte
+           |                          cdma-evdo, lte
+           |                          lte
+           |                          cdma-evdo, gsm-umts, lte
+           |                 current: cdma-evdo, gsm-umts, lte
+           |            equipment id: 863412045180463
+  -----------------------------------
+  System   |                  device: /sys/devices/pci0000:00/0000:00:08.1/0000:06:00.4/usb3/3-2/3-2.2
+           |                 physdev: /sys/devices/pci0000:00/0000:00:08.1/0000:06:00.4/usb3/3-2/3-2.2
+           |                 drivers: cdc_mbim, option
+           |                  plugin: quectel
+           |            primary port: cdc-wdm2
+           |                   ports: cdc-wdm2 (mbim), ttyUSB4 (ignored), ttyUSB5 (gps), 
+           |                          ttyUSB6 (at), ttyUSB7 (at), wwan0 (net)
+  -----------------------------------
+  Status   |                    lock: sim-pin2
+           |          unlock retries: sim-pin2 (3)
+           |                   state: enabled
+           |             power state: on
+           |          signal quality: 0% (recent)
+  -----------------------------------
+  Modes    |               supported: allowed: 2g; preferred: none
+           |                          allowed: 3g; preferred: none
+           |                          allowed: 2g, 3g; preferred: 3g
+           |                          allowed: 2g, 3g; preferred: 2g
+           |                          allowed: 2g, 4g; preferred: 4g
+           |                          allowed: 2g, 4g; preferred: 2g
+           |                          allowed: 3g, 4g; preferred: 4g
+           |                          allowed: 3g, 4g; preferred: 3g
+           |                          allowed: 2g, 3g, 4g; preferred: 4g
+           |                          allowed: 2g, 3g, 4g; preferred: 3g
+           |                          allowed: 2g, 3g, 4g; preferred: 2g
+           |                 current: allowed: 2g, 3g, 4g; preferred: 4g
+  -----------------------------------
+  Bands    |               supported: egsm, dcs, utran-1, utran-8, eutran-1, eutran-3, eutran-5, 
+           |                          eutran-8, eutran-34, eutran-38, eutran-39, eutran-40, eutran-41, 
+           |                          cdma-bc0
+           |                 current: egsm, dcs, utran-1, utran-8, eutran-1, eutran-3, eutran-5, 
+           |                          eutran-8, eutran-34, eutran-38, eutran-39, eutran-40, eutran-41, 
+           |                          cdma-bc0
+  -----------------------------------
+  IP       |               supported: ipv4, ipv6, ipv4v6
+  -----------------------------------
+  3GPP     |                    imei: 863412045180463
+           |           enabled locks: fixed-dialing
+           |            registration: idle
+  -----------------------------------
+  3GPP EPS |    ue mode of operation: csps-1
+  -----------------------------------
+  SIM      |        primary sim path: /org/freedesktop/ModemManager1/SIM/4
+
+另外在第一块EC20上进行了如下操作：
+1.开启IMS， AT+QCFG=“ims”,1
+2.查看mbn文件 AT+QMBNCFG=“List”
+
++QMBNCFG: "List",0,1,1,"ROW_Generic_3GPP",0x05010824,201806201
++QMBNCFG: "List",1,0,0,"OpenMkt-Commercial-CU",0x05011510,201911151
++QMBNCFG: "List",2,0,0,"OpenMkt-Commercial-CT",0x0501131C,201911141
++QMBNCFG: "List",3,0,0,"Volte_OpenMkt-Commercial-CMCC",0x05012011,201904261
+该版本确实不支持CT VOLTE.
+3.禁用自动选择mbn文件 AT+QMBNCFG=“AutoSel”,0
+4.反激活当前的mbn AT+QMBNCFG=“deActivate”
+5.强制选择第一个mbn文件-3GPP AT+QMBNCFG=“select”,“ROW_Generic_3GPP”
+6.重启模块 AT+CFUN=1,1
+
+目前该模块已可以正常注册联网。
