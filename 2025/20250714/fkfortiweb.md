@@ -2,7 +2,7 @@
 title: 看看fortiweb寻找持久化手段
 date: 2025-7-14 19:00:00
 
-cover: https://tc.z.wiki/autoupload/f/s53jY0hzeXWnA2DBfRnx7Z_Kv4b_7Q93KIuY3QIXybyyl5f0KlZfm6UsKj-HyTuv/20250715/Qd5M/840X1200/60168840_p0.jpg
+cover: https://image.hairenjun.link/2025/60168840_p0.jpg
 
 tags:
 
@@ -196,5 +196,5 @@ gemini分析了一下，应该是/etc/init负责拉起整个业务，去看看
 {% endraw %}
 
 ### 封面大图（エミリア prpr🥰）
-![60168840](https://tc.z.wiki/autoupload/f/s53jY0hzeXWnA2DBfRnx7Z_Kv4b_7Q93KIuY3QIXybyyl5f0KlZfm6UsKj-HyTuv/20250715/Qd5M/840X1200/60168840_p0.jpg)
+![60168840](https://image.hairenjun.link/2025/60168840_p0.jpg)
 **PixivID:60168840**

@@ -350,7 +350,7 @@ response: ''
                        
 
 
-                       ┌──(hairenjun㉿hairenjun)-[/media/hairenjun/DB/ITI/bsnl]
+┌──(hairenjun㉿hairenjun)-[/media/hairenjun/DB/ITI/bsnl]
 └─$ curl --tlsv1.2 --noproxy '*' -v https://www.bilibili.com
 
 * Host www.bilibili.com:443 was resolved.

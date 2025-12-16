@@ -1,0 +1,97 @@
+┌──(hairenjun㉿hairenjun)-[/media/…/KernelMigrate/OxygenOS1500832EX01CPH2655/cc05bc54d53631f2c946a9c6e02a3c6b6cb24c6b/extracted_20250905_062117]
+└─$ fastboot flash vbmeta --disable-verity --disable-verification vbmeta.img
+
+
+Rewriting vbmeta struct at offset: 0
+Sending 'vbmeta' (12 KB)                           OKAY [  0.001s]
+Writing 'vbmeta'                                   OKAY [  0.001s]
+Finished. Total time: 0.146s
+                                                                                
+┌──(hairenjun㉿hairenjun)-[/media/…/KernelMigrate/OxygenOS1500832EX01CPH2655/cc05bc54d53631f2c946a9c6e02a3c6b6cb24c6b/extracted_20250905_062117]
+└─$ fastboot reboot recovery                                                
+Rebooting into recovery                            OKAY [  0.002s]
+Finished. Total time: 0.052s
+
+
+┌──(hairenjun㉿hairenjun)-[/media/…/out/target/product/lineage_gsi_arm64]
+└─$ fastboot devices     
+7f5e3e7c	 fastboot
+
+                                                                                
+┌──(hairenjun㉿hairenjun)-[/media/…/out/target/product/lineage_gsi_arm64]
+└─$ fastboot reboot fastboot
+Rebooting into fastboot                            OKAY [  0.002s]
+< waiting for any device >
+Finished. Total time: 25.600s
+                                                                                
+┌──(hairenjun㉿hairenjun)-[/media/…/out/target/product/lineage_gsi_arm64]
+└─$ fastboot devices        
+7f5e3e7c	 fastbootd
+
+                                                                                
+┌──(hairenjun㉿hairenjun)-[/media/…/out/target/product/lineage_gsi_arm64]
+└─$ fastboot flash system system.img
+
+
+Resizing 'system_b'                                FAILED (remote: 'Not enough space to resize partition')
+fastboot: error: Command failed
+                                                                                
+┌──(hairenjun㉿hairenjun)-[/media/…/out/target/product/lineage_gsi_arm64]
+└─$ fastboot getvar super-partition-size
+
+getvar:super-partition-size                        FAILED (remote: 'Unknown variable')
+Finished. Total time: 0.000s
+                                                                                
+┌──(hairenjun㉿hairenjun)-[/media/…/out/target/product/lineage_gsi_arm64]
+└─$ fastboot getvar partition:system_a:size
+
+getvar:partition:system_a:size                     FAILED (remote: 'Unknown variable')
+Finished. Total time: 0.000s
+                                                                                
+┌──(hairenjun㉿hairenjun)-[/media/…/out/target/product/lineage_gsi_arm64]
+└─$ fastboot devices                       
+7f5e3e7c	 fastbootd
+
+                                                                                
+┌──(hairenjun㉿hairenjun)-[/media/…/out/target/product/lineage_gsi_arm64]
+└─$ fastboot getvar super-partition-size
+
+getvar:super-partition-size                        FAILED (remote: 'Unknown variable')
+Finished. Total time: 0.000s
+                                                                                
+┌──(hairenjun㉿hairenjun)-[/media/…/out/target/product/lineage_gsi_arm64]
+└─$ fastboot getvar partition:system_a:size
+getvar:partition:system_a:size                     FAILED (remote: 'Unknown variable')
+Finished. Total time: 0.000s
+                                                                                
+┌──(hairenjun㉿hairenjun)-[/media/…/out/target/product/lineage_gsi_arm64]
+└─$ fastboot getvar partition:system:size   
+getvar:partition:system:size                       FAILED (remote: 'Unknown variable')
+Finished. Total time: 0.000s
+                                                                                
+┌──(hairenjun㉿hairenjun)-[/media/…/out/target/product/lineage_gsi_arm64]
+└─$ fastboot getvar partition:vendor:size  
+getvar:partition:vendor:size                       FAILED (remote: 'Unknown variable')
+Finished. Total time: 0.000s
+                               
+
+
+└─$ fastboot devices                     
+7f5e3e7c	 fastbootd
+
+                                                                                
+┌──(hairenjun㉿hairenjun)-[~/Program/UotanToolbox]
+└─$ fastboot delete-logical-partition product_b
+Deleting 'product_b'                               OKAY [  0.003s]
+Finished. Total time: 0.003s
+                                                                                
+┌──(hairenjun㉿hairenjun)-[~/Program/UotanToolbox]
+└─$ fastboot delete-logical-partition my_product_b
+Deleting 'my_product_b'                            OKAY [  0.003s]
+Finished. Total time: 0.003s
+                                                                                
+┌──(hairenjun㉿hairenjun)-[~/Program/UotanToolbox]
+└─$ fastboot delete-logical-partition system_ext_b
+Deleting 'system_ext_b'                            OKAY [  0.003s]
+Finished. Total time: 0.003s
+                                 
