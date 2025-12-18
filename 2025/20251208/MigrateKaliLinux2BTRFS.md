@@ -2,7 +2,7 @@
 title: 不使用LVM而是subvolume安装全新的LUKS+btrfs的KaliLinux
 date: 2025-12-08 19:00:00
 
-cover: https://tc.z.wiki/autoupload/f/s53jY0hzeXWnA2DBfRnx7Z_Kv4b_7Q93KIuY3QIXybyyl5f0KlZfm6UsKj-HyTuv/20250715/Qd5M/840X1200/60168840_p0.jpg
+cover: https://image.hairenjun.link/2025/Cover_%E6%A9%99%E8%89%B2%E5%B0%91%E5%A5%B3%E5%BF%83.webp
 
 tags:
 
@@ -26,6 +26,7 @@ categories:
 keywords: Kali,Linux,OS Install,Btrfs,Data Migrate
 description: Install Kali linux with luks encryption and btrfs then migrate data from old system, without LVM but btrfs subvolume
 ---
+## 不要在看完全文之前上手操作，不然会出问题
 
 ## 前情提要
 由于历史遗留问题，系统装在一块原厂三星的SSD上，只有500G空间。不过用了四年了，装了VS Code还有各种套件都还120GB空间，搞搞低强度Coding完全够了。但是啊但是，很快强度就上来了，第一个大头就是自己编译手机的Kernel和LineageOS，一下就给我吃完了，还不得不分60G作SWAP不然就要当场爆内存。然后Proton兼容层让我直接把Gaming平台也迁移到Linux上了，这下Windows彻底成Adobe全家桶和国产毒瘤的垃圾场了（谁会放心用一个上个厕所就自己重启更新的系统呢？）。于是乎被迫在存储暴涨的时间段花重金买入新SSD，计划来个赛博大搬家。
@@ -37,7 +38,7 @@ description: Install Kali linux with luks encryption and btrfs then migrate data
 
 这下Btrfs的优势就体现出来了，有快照，自纠错，有压缩，性能也不太差。除了不能方便的dd出一个块然后mkswap之外还没看到特别要命的问题。你可能会问为啥不用ZFS，ZFS确实强，但是我就这一块盘，ZFS太沉重了属实没必要。
 
-然后你又要问，Kali的Live USB安装器可以直接自动Btrfs，手动装是何意味？这就不得不说自动装的问题了，这是早先时候和Gemini探讨可行性的时候发现的问题：如果要使用Luks，则自动安装会在Luks上用LVM而非直接使用btrfs的subvolume，变成了风味儿btrfs不说，还有额外的性能损失；而且还有必要规划一个更大的boot分区，现在装的东西多了，四年前的700MB可以放四个版本的kernel，现在不把前一个kernel删掉apt upgrade都跑不下来；自动LUKS会全盘写随机数，我这QLC真顶不住怕英年早逝......
+然后你又要问，Kali的Live USB安装器可以直接自动Btrfs，手动装是何意味？这就不得不说自动装的问题了，这是早先时候和Gemini探讨可行性的时候发现的问题：如果要使用Luks，则自动安装会在Luks上用LVM而非直接使用btrfs的subvolume，变成了风味儿btrfs不说，还有额外的性能损失；而且还有必要规划一个更大的boot分区，现在装的东西多了，四年前的700MB可以放四个版本的kernel，现在不把前一个kernel删掉apt upgrade都跑不下来；自动LUKS会全盘写随机数，我这QLC SSD真顶不住怕英年早逝......
 
 最后，该搞点新东西了，这是个拥抱新技术走上未来路的绝佳机会，设备变砖那一晚学的东西远超大学四年听的废话（）
 
@@ -142,7 +143,7 @@ chsh -s /usr/bin/zsh root
 大功告成，可以重启试试看效果了～！
 
 
-## 喜闻乐见的Debug阶段🤡🤡🤡
+## 喜闻乐见的Debug阶段🤡🤡
 好消息是UEFI确实识别到了新的启动设备，能直接从USB起起来，坏消息是没能进系统...最后在initramfs弹了个shell出来
 
 好在是有报错信息，提示找不到btrfs的UUID；但是诡异的是报错的这个ID并不在硬盘分区上也不再我给的fstab里，关键时刻Gemini的超长上下文找到了问题的关键：这个UUID是解锁后的btrfs，在解锁之前kernel当然读不到，所以还得对grub做出修改，让他能等decrypt完成后再去读东西。
@@ -278,5 +279,108 @@ chsh -s /usr/bin/zsh root
 ``` bash
 apt install cryptsetup-initramfs
 ```
+## 走捷徑了bro🤡🤡🤡
 
+在反复重装之中，我突然发现安装器（Installer）在磁盘分区这一步的时候是可以手动分区的，不过就是有一些操作不然安装器不知道往哪装
 
+首先是分区，这个没什么好说的，必要的分区只有三个其实：ESP，BOOT，ROOT
+
+在分区分完大小后，使用"use as"这个选项卡选好文件系统，ESP就是EFI，兼容性考虑BOOT使用ext2，这里要选择mount point为/boot不然后面grub不知道往哪装
+
+然后就是这沟槽的ROOT，要是没有安全需求的话单纯的btrfs或者ext4就好了，如果要上LUKS2的话，还是有点坑的，必须按操作来:
+  + 首先是将分区大小分配好，例如我给/分了1TB空间，给/home分了2TB，我还是推荐分开的，这样的话system本身炸了也可以单纯重装而不严重影响工作的数据
+  + 差点忘了SWAP还得分64G，我还是推荐多分点，毕竟btrfs不能后期dd出一个块当SWAP用
+  + 然后，set up crypted volumes, 选定那俩分区，下一步的时候记得取消Erase Data，咱QLC经不起全盘写一遍的折腾，反正新盘没东西，挂在就用mapper就行
+  + 配置LUKS的Passphrase
+  + 然后就会回到分区界面，会发现多了仨mapper出来的块存储，再去选择文件系统（这次我肯定选btrfs了）
+  + 选择挂载点，/ 和/home，其中/挂载点必须要有不然安装器不知道往哪塞文件，SWAP不用选挂载点
+
+至此，分区工作完成，此时应该至少有三个分区和对应的挂载点（我有五个分区和三个挂载点）：ESP-->EFI, Ext2/Ext3/Ext4-->/boot, Ext4/Btrfs/... -->/
+
+然后就可以点Finish Partition进入安装工作了，不然安装器会报错，要么装不上grub要不干脆找不到root不能进安装进程
+
+/boot暴露在LUKS之外确实不对劲，但是虽然安装器会说systemd能够保证boot放LUKS里面也没问题，但是就没成功过，全是装不上或者起不来，不知道是bug还是操作有问题
+
+选一下软件包和桌面环境等装完，我推荐Gnome
+
+## 坑，又是大坑🤡🤡🤡🤡
+这里不得不说一个大坑了，就是这个Gnome
+
+务必下载2025.4版本的Installer，因为这个版本的会默认装Gnome49,和6.16内核；如果是老版本的话，一个 apt upgrade就会升级到6.17内核和Gnome49
+
+这有什么问题呢？问题就是Gnome49彻底没有了X11而只支持Wayland/Xwayland， 容易出现老配置还是X11导致Gnome跑不起来；第二个就是FK Nvidia环节，加上6.17和Wayland Gnome会神奇的跑不起来桌面（我🥬）
+
+试过在Rescure下重装Gnome都不行，于是发现事情不简单，直到我看到了这个，手动修有点困难了，反正是白板直接重装吧:
+``` bash
+DMESG：
+[   54.488912] r8169 0000:05:00.0 eth0: Link is Down
+[   59.531035] traps: gnome-session-i[1807] trap int3 ip:7fd6841c974b sp:7fff9fb0b820 error:0 in libglib-2.0.so.0.8600.2[6874b,7fd684180000+a5000]
+[   65.971445] traps: gnome-session-i[1958] trap int3 ip:7f4c8e9f474b sp:7ffd92991160 error:0 in libglib-2.0.so.0.8600.2[6874b,7f4c8e9ab000+a5000]
+[   71.151349] traps: gnome-session-i[2083] trap int3 ip:7f3c2a09874b sp:7ffcea7b0f40 error:0 in libglib-2.0.so.0.8600.2[6874b,7f3c2a04f000+a5000]
+[   76.302550] traps: gnome-session-i[2228] trap int3 ip:7f32a616774b sp:7fff90c688d0 error:0 in libglib-2.0.so.0.8600.2[6874b,7f32a611e000+a5000]
+[   81.518601] traps: gnome-session-i[2375] trap int3 ip:7f2b8df7774b sp:7ffe8c71e590 error:0 in libglib-2.0.so.0.8600.2[6874b,7f2b8df2e000+a5000]
+[   86.702936] traps: gnome-session-i[2524] trap int3 ip:7f80a768474b sp:7ffefe07b4a0 error:0 in libglib-2.0.so.0.8600.2[6874b,7f80a763b000+a5000]
+
+Journalctl:
+ 14 19:57:37 Sherrys gnome-session[1808]: Failed to start unit gnome-session-x11@gnome-login.target: GDBus.Error:org.freedesktop.systemd1.NoSuchUnit: Unit gnome-session-x11@gnome-login.target not found.
+Dec 14 19:57:38 Sherrys systemd-coredump[1817]: Process 1808 (gnome-session-i) of user 60578 dumped core.
+                                                Module libblkid.so.1 from deb util-linux-2.41.2-4.amd64
+                                                Module libatomic.so.1 from deb gcc-15-15.2.0-9.amd64
+                                                Module libmount.so.1 from deb util-linux-2.41.2-4.amd64
+                                                Stack trace of thread 1808:
+                                                #0  0x00007fe3ebef674b g_log_structured_array (libglib-2.0.so.0 + 0x6874b)
+                                                #1  0x00007fe3ebef6bc4 g_log_default_handler (libglib-2.0.so.0 + 0x68bc4)
+                                                #2  0x00007fe3ebef6e29 g_logv (libglib-2.0.so.0 + 0x68e29)
+                                                #3  0x00007fe3ebef7193 g_log (libglib-2.0.so.0 + 0x69193)
+                                                #4  0x000055ee866427a8 n/a (/usr/libexec/gnome-session-init-worker + 0x27a8)
+                                                #5  0x00007fe3ebcc1ca8 n/a (libc.so.6 + 0x29ca8)
+                                                #6  0x00007fe3ebcc1d65 __libc_start_main (libc.so.6 + 0x29d65)
+                                                #7  0x000055ee86642a51 n/a (/usr/libexec/gnome-session-init-worker + 0x2a51)
+                                                
+                                                Stack trace of thread 1815:
+                                                #0  0x00007fe3ebd329ee n/a (libc.so.6 + 0x9a9ee)
+                                                #1  0x00007fe3ebd27668 n/a (libc.so.6 + 0x8f668)
+                                                #2  0x00007fe3ebd276ad n/a (libc.so.6 + 0x8f6ad)
+                                                #3  0x00007fe3ebd9be6e ppoll (libc.so.6 + 0x103e6e)
+                                                #4  0x00007fe3ebeedaf4 n/a (libglib-2.0.so.0 + 0x5faf4)
+                                                #5  0x00007fe3ebeee4cf g_main_loop_run (libglib-2.0.so.0 + 0x604cf)
+                                                #6  0x00007fe3ec17c72a n/a (libgio-2.0.so.0 + 0x12e72a)
+                                                #7  0x00007fe3ebf200e6 n/a (libglib-2.0.so.0 + 0x920e6)
+                                                #8  0x00007fe3ebd2ab7b n/a (libc.so.6 + 0x92b7b)
+                                                #9  0x00007fe3ebda87b8 n/a (libc.so.6 + 0x1107b8)
+                                                
+                                                Stack trace of thread 1814:
+                                                #0  0x00007fe3ebd329ee n/a (libc.so.6 + 0x9a9ee)
+                                                #1  0x00007fe3ebd27668 n/a (libc.so.6 + 0x8f668)
+                                                #2  0x00007fe3ebd276ad n/a (libc.so.6 + 0x8f6ad)
+                                                #3  0x00007fe3ebd9be6e ppoll (libc.so.6 + 0x103e6e)
+                                                #4  0x00007fe3ebeedaf4 n/a (libglib-2.0.so.0 + 0x5faf4)
+                                                #5  0x00007fe3ebeee1d0 g_main_context_iteration (libglib-2.0.so.0 + 0x601d0)
+                                                #6  0x00007fe3ebeee221 n/a (libglib-2.0.so.0 + 0x60221)
+                                                #7  0x00007fe3ebf200e6 n/a (libglib-2.0.so.0 + 0x920e6)
+                                                #8  0x00007fe3ebd2ab7b n/a (libc.so.6 + 0x92b7b)
+                                                #9  0x00007fe3ebda87b8 n/a (libc.so.6 + 0x1107b8)
+                                                
+                                                Stack trace of thread 1813:
+                                                #0  0x00007fe3ebda6779 syscall (libc.so.6 + 0x10e779)
+                                                #1  0x00007fe3ebf1f962 g_cond_wait (libglib-2.0.so.0 + 0x91962)
+                                                #2  0x00007fe3ebeb3b04 n/a (libglib-2.0.so.0 + 0x25b04)
+                                                #3  0x00007fe3ebf203a4 n/a (libglib-2.0.so.0 + 0x923a4)
+                                                #4  0x00007fe3ebf200e6 n/a (libglib-2.0.so.0 + 0x920e6)
+                                                #5  0x00007fe3ebd2ab7b n/a (libc.so.6 + 0x92b7b)
+                                                #6  0x00007fe3ebda87b8 n/a (libc.so.6 + 0x1107b8)
+                                                ELF object binary architecture: AMD x86-64
+```
+
+第二个坑来自Btrfs，首先是记得装btrfs-progs不然update-grub还是update-initramfs会有点问题，导致无法完成升级，表现就是apt upgrade会Fail；第二个就是Installer会在/下创建一个.snapshot的subvolume,如果要使用btrfs-assistant这样的工具创建根目录快照防炸机的话会提示subvolume存在，我听信了Gemini的话手动卸载并删除了.snapshots然后btrfs确实OK的创建好了，但是下次开机直接进维护模式了...multiuser.target都进不去...这里又要提醒一下，进系统第一件事就是创建root用户密码，不然维护模式都进不去，没权限拿TTY
+
+没办法只能再拿安装器，进rescure mode，挂载root，改root密码；直接journalctl，发现是无法挂载.snapshots致的,那好说了，直接去/etc/fstab把这个挂载去掉就行了，毕竟snapshot是btrfs-assistant在管，改完了update-initramfs然后update-grub2, OK
+
+有一说一，用了btrfs后可以每一个小时保存一次快照，每天保存一个快照，再也不怕rm -rf了
+
+## 参杂私货😋
+{% raw %}
+<iframe src="//player.bilibili.com/player.html?isOutside=true&aid=637549597&bvid=BV19Y4y1i7or&cid=556747043&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
+{% endraw %}
+听着就像是回到了胡思乱想的初中时代,封面大图
+![大河Prpr](https://image.hairenjun.link/2025/Cover_%E6%A9%99%E8%89%B2%E5%B0%91%E5%A5%B3%E5%BF%83.webp)
